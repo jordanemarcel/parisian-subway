@@ -17,7 +17,7 @@
  * @return 1 if the sation can be found 0 otherwise
  */
 int find_station(List_adj * subway, char * name, int * station_num){
-	Station * station = get_station(subway->station_map,source);
+	Station * station = get_station(subway->station_map,name);
 	if(station==NULL)
 		return 0;
 	*station_num = station->vertex_nb;
@@ -32,10 +32,10 @@ int find_station(List_adj * subway, char * name, int * station_num){
 void find_path(char * source, char * target, List_adj * subway){
 	int from, to;
 	Stack * result;
-	if(!find_station(subway,source,&from) && !find_station(subway,target,&to)){
+	if(!find_station(subway,source,&from) || !find_station(subway,target,&to)){
 		printf("Station can not be found, check them spell");
 		return;
-	}		
+	}
 	printf("Looking for a path from %s to %s\n",subway->name[from],subway->name[to]);
 	result = get_path(subway,from,to);
 	if(result==NULL){
@@ -65,7 +65,7 @@ void find_shortest_path(char * source, char * target, List_adj * subway,int mode
 	int from, to;
 	Stack * result;
 	char modename[3][20]={{"station"},{"correspondance"},{"time"}};
-	if(!find_station(subway,source,&from) && !find_station(subway,target,&to)){
+	if(!find_station(subway,source,&from) || !find_station(subway,target,&to)){
 		printf("Station can not be found, check them spell");
 		return;
 	}
@@ -90,13 +90,13 @@ int main (int argc, char* argv[]){
 	char to[50];
 	char impl;
 	/* cas qui bug */
-	/*
+	
 	Stack * result= dijkstra(la,80,103,0);
 	while(!is_empty(result)){
 		int tmp = pop(result);
 		printf("%s-%s ",la->name[tmp],la->line[tmp]);
  	}
- 	*/
+ 	
 	while (1){
 		printf("choose the implementation:(type corresponding number)\n1)-matrix\n2)-list\n3)-quit\n");
 		fscanf(stdin,"%c",&impl);

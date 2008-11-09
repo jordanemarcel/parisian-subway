@@ -3,7 +3,7 @@
 #include <string.h>
 #include "adjacent_list.h"
 #include "hashmap.h"
-#define STATION_FILE "/home/nex/documents/C/parisian-subway/station_list"
+#define STATION_FILE "/home/jordane/workspace/Parisian_Subway/station_list"
 
 List_adj * load_station(){
 	char buffer_reader[100];
