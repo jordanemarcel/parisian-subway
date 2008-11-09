@@ -19,10 +19,14 @@ dijkstra_t * new_dijkstra_s(int size){
 	dij->distance = (int *) calloc ( sizeof( int ), size);
 	dij->size = size;
 	dij->parent_pos = 0;
-	
+
 	return dij;
 }
 
+/**
+ * Return the minimum distance between all the non visited vertex
+ * If all vertex have been visited, return -1
+ * */
 int min_distance(dijkstra_t * dij){
 	int i,min=10000000,min_pos=-1;
 	for (i=0;i<dij->size;i++){
@@ -54,26 +58,24 @@ Stack * dijkstra(List_adj * la,int source,int target,enum dijkstra_mode mode){
 	dij->distance[source] = 0;
 	dij->parent[source] = -1;
 	/*printf("dij->size %d\n",dij->size);*/
-	for (i=0;i<dij->size;i++){
-		if(dij->visited[i]==white){
-			/*printf("non visiter= %d\n",i);*/
-			current = min_distance(dij);
-			dij->visited[current] = black;
-			tmp_list = la->list[current];
-			while (tmp_list != NULL){
-				/*printf("a visiter current=%d,target=%d\n",current,tmp_list->target);*/
-				if ( dij->visited[tmp_list->target] == white){
-					if (dij->distance[tmp_list->target] > dij->distance[current] + link_value[mode][tmp_list->linkvalue]){
-						
-						dij->distance[tmp_list->target]	= dij->distance[current] + link_value[mode][tmp_list->linkvalue];
-						dij->parent[tmp_list->target] = current;
-					}
-				}
-				tmp_list = tmp_list->next;
-			}
-		}
-	}
 	
+	current = min_distance(dij);
+	while(current!=-1) {
+		dij->visited[current] = black;
+		tmp_list = la->list[current];
+		while (tmp_list != NULL){
+			/*printf("a visiter current=%d,target=%d\n",current,tmp_list->target);*/
+			if ( dij->visited[tmp_list->target] == white){
+				if (dij->distance[tmp_list->target] > dij->distance[current] + link_value[mode][tmp_list->linkvalue]){
+
+					dij->distance[tmp_list->target]	= dij->distance[current] + link_value[mode][tmp_list->linkvalue];
+					dij->parent[tmp_list->target] = current;
+				}
+			}
+			tmp_list = tmp_list->next;
+		}
+		current = min_distance(dij);
+	}
 	tmp=target;
 	while(dij->parent[tmp] != -1){
 		push(stack,tmp);
